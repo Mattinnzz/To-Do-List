@@ -1,24 +1,25 @@
 const express = require('express');
-const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-
-
-const PORT = process.env.PORT || 8080;
-const app = express();
-
-const { mongoConnect } = require('./services/mongo');
-
-
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-
-
+const cookieParser = require('cookie-parser')
+const { requireAuth, checkUser } = require('./middleware/authenticateMiddleware');
 const userRoutes = require('./routes/userRoutes');
 const taskRoutes = require('./routes/taskRoutes');
 
 
-app.use('/users', userRoutes);
+const PORT = process.env.PORT || 8081;
+const app = express();
+
+
+const { mongoConnect } = require('./services/mongo');
+
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cookieParser());
+app.use('/user', userRoutes);
 app.use('/tasks', taskRoutes);
+app.get('*', checkUser);
 
 
 
