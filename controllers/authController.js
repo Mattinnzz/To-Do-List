@@ -70,7 +70,7 @@ async function signup_post (req, res){
 
   try {
     const newUser = await createUser(email, username, password);
-    const token = createToken(newUser._id); // Fix: Use newUser instead of user
+    const token = createToken(newUser._id); 
     res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge * 1000 });
     res.status(201).json({ user: newUser._id });
   } catch (err) {
